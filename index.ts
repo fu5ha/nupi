@@ -31,6 +31,16 @@ export default function (pi: ExtensionAPI) {
 			"Multi-line scripts are fine. " +
 			"Avoid raw bash syntax — use nushell idioms instead (e.g. `| where`, `| get`, `| to json`).",
 
+		promptSnippet: "Executes nushell scripts with full language support (pipelines, open, http get, structured data, etc.)",
+
+		promptGuidelines: [
+			"The `bash` tool executes nushell directly — simple expressions like `5 + 5` or `ls | where size > 1mb` work as-is.",
+			"Avoid `nu -c` and `echo` — scripts are already run by nu, no wrapping needed.",
+			"To list built-in commands: `help commands | where command_type == built-in | get name | to text`",
+			"To list custom commands: `help commands | where command_type == custom | get name | to text`",
+			"To get help on a command: `help <command> | ansi strip | str trim`",
+		],
+
 		parameters: Type.Object({
 			command: Type.String({
 				description: "Nushell script to run. May be multi-line.",
@@ -58,12 +68,7 @@ export default function (pi: ExtensionAPI) {
 				}
 			};
 
-			// Resolve the working directory from whatever ctx exposes,
-			// falling back gracefully if the field isn't available yet.
-			const cwd =
-				(ctx as any)?.workingDir ??
-				(ctx as any)?.session?.workingDir ??
-				process.cwd();
+			const cwd = ctx.cwd;
 
 			return new Promise<ReturnType<typeof resolveShape>>((resolve) => {
 				let stdout = "";
