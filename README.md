@@ -14,23 +14,15 @@ Registers a tool named `bash` (displayed as `nushell` in the TUI) that executes 
 
 ## Installation
 
-Get repo and
-
 ```sh
-npm install
+pi install git:github.com/kiil/nupi
 ```
-
-Then register the extension with Pi.
-
-## Usage
-
-Use the provided extension and the nupi.md prompt template.
 
 Remember to create a pi.nu in your nushell config dir (~/.config/nushell/pi.nu) and source custom commands and `use` modules you want available on pi.
 
 Bonus:
 
-You can use this in your pi config if you additionally want nushell for th ! and !! functionality in pi:
+You can use this in your pi config if you additionally want nushell for the ! and !! functionality in pi:
 
   "shellPath": "/path/to/your/nu"
 
@@ -42,10 +34,3 @@ You can use this in your pi config if you additionally want nushell for th ! and
 - Default timeout is **30 seconds** (overridable per call).
 - Nushell is spawned with `--config ~/.config/nushell/pi.nu` - make sure to source your custom commands and `use` modules you need from a pi.nu file in that location.
 - Temp files are cleaned up after each run, even on error or timeout.
-
-## Usage tips (for the agent)
-
-- Run expressions directly: `5 + 5`, `ls | where size > 1mb`
-- Don't use `nu -c` or `echo` — scripts are already executed by `nu`
-- List built-in commands: `help commands | where command_type == built-in | get name | to text`
-- Get help on a command: `help <command> | ansi strip | str trim`
