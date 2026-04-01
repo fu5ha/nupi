@@ -1,6 +1,6 @@
 # nupi 🐘π
 
-A [Pi Coding Agent](https://github.com/mariozechner/pi-coding-agent) extension that replaces the built-in bash tool with [Nushell](https://www.nushell.sh/) (`nu`).
+A [Pi Coding Agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) extension that replaces the built-in bash tool with [Nushell](https://www.nushell.sh/) (`nu`).
 
 ## What it does
 
