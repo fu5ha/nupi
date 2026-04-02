@@ -40,6 +40,33 @@ export default function (pi: ExtensionAPI) {
 			"To list built-in commands: `help commands | where command_type == built-in | get name | to text`",
 			"To list custom commands: `help commands | where command_type == custom | get name | to text`",
 			"To get help on a command: `help <command> | ansi strip | str trim`",
+			`Use nuon (Nushell Object Notation) Nushell's native, human-readable, and structured data format. It's designed to be easily read and written by both humans and machines, making it ideal for configuration files and for representing data pipelines. internally. eg:
+
+      Create or input structured data in table form directly like so:
+
+				[
+    				[
+        				name,
+        				size,
+        				modified
+    				];
+    				[
+        				c,
+        				0b,
+        				2025-11-28T23:05:54.188208850+01:00
+    				],
+    				[
+        				d,
+        				0b,
+        				2025-11-28T23:05:54.188208850+01:00
+    				],
+    				[
+        				e,
+        				0b,
+        				2025-11-28T23:05:54.188208850+01:00
+    				]
+				] | get name
+			`,
 		],
 
 		parameters: Type.Object({
