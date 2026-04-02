@@ -36,6 +36,9 @@ export default function (pi: ExtensionAPI) {
 
 		promptGuidelines: [
 			"Scripts run directly in nu — no `nu -c` wrapper or `echo` needed. Simple expressions like `5 + 5` or `ls | where size > 1mb` work as-is.",
+			"Always use nushell for calculations, send eg. `1400 * 300` directly.",
+			"When doing exressions remember to use parenthesis correctly, eg. `(open ceos.nuon | get salary | math sum) / (open ceos.nuon | get salary | length)`",
+			"For more advanced math check out `help math` and `help math <subcommand>` first.",
 			"Discover commands: `help commands | where command_type == built-in | get name | to text` (built-ins), same with `custom` for user-defined. Get help on one: `help <command> | ansi strip | str trim`",
 			`Nushell accepts structured data (nuon) directly as input — strings, lists, records, and tables. Pass data inline rather than constructing it with string manipulation:
 
@@ -54,7 +57,8 @@ export default function (pi: ExtensionAPI) {
       ] | get name
 
   Prefer the table format (one header row, data rows below) over a list of records.`,
-			"In nushell, spaces separate items — commas are optional. Multi-word values must be quoted: `[Alice 30 \"New York\"]` is a 3-item list. Records follow the same rule: `{ key: \"multi word value\" other: singleword }`",
+			"In nushell, spaces separate items — commas are optional. Multi-word values MUST be quoted: `[Alice 30 \"New York\"]` is a 3-item list. Records follow the same rule: `{ key: \"multi word value\" other: singleword }`",
+			"To write output to a file, use the `save` command instead of bash-style redirection (`>`). Example: `ls | to json | save output.json`. Use `save --append` to append. Run `save --help` for full options.",
 		],
 
 		parameters: Type.Object({
@@ -73,7 +77,8 @@ export default function (pi: ExtensionAPI) {
 			const label = theme.fg("toolTitle", "🐘 nushell");
 			const firstLine = args.command.split("\n")[0];
 			const preview = firstLine + (args.command.includes("\n") ? " …" : "");
-			text.setText(`${label} ${theme.fg("muted", preview)}`);
+			const full = args.command.includes("\n") ? "\n" + theme.fg("muted", args.command) : "";
+			text.setText(`${label} ${theme.fg("muted", preview)}${full}`);
 			return text;
 		},
 
@@ -86,6 +91,7 @@ export default function (pi: ExtensionAPI) {
 
 		async execute(toolCallId, params, signal, onUpdate, ctx) {
 			const { command, timeout = 30_000 } = params;
+
 
 			// Write the script to a temp file so multi-line scripts and
 			// special characters survive shell quoting without any escaping.
