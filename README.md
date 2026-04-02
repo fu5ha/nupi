@@ -24,7 +24,31 @@ Bonus:
 
 You can use this in your pi config if you additionally want nushell for the ! and !! functionality in pi:
 
-  "shellPath": "/path/to/your/nu"
+```json
+  "shellPath": "/path/to/your/nu",
+```
+
+You can even set nushell up to output `nuon` instead of the standard table. To make the output digestable and token effective for the coding agent and underlying LLM.
+
+Add this in your gene `pi.nu`.
+
+```nushell
+$env.config = {
+  # ... dine andre indstillinger
+  hooks: {
+    display_output: {
+      if ($in | describe | str contains "table") or ($in | describe | str contains "list") or ($in | describe | str contains "record") {
+        $in | to nuon --indent 2  # Her tvinger vi NUON i stedet for tabel
+      } else {
+        table # Hvis det er noget andet, så brug standard tabel-visning
+      }
+    }
+  }
+}
+```
+
+Unfortunately, there is currently no clean way to make this work for the ! and !! functionality as the shellPath config option does not accept arguments.
+
 
 ## Behavior
 
