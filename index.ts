@@ -41,6 +41,7 @@ export default function (pi: ExtensionAPI) {
 			"When doing exressions remember to use parenthesis correctly, eg. `(open ceos.nuon | get salary | math sum) / (open ceos.nuon | get salary | length)`",
 			"For more advanced math check out `help math` and `help math <subcommand>` first.",
 			"Discover commands: `help commands | where command_type == built-in | get name | to text` (built-ins), same with `custom` for user-defined. Get help on one: `help <command> | ansi strip | str trim`",
+			"Display using the `table` command only if user asks for table or better readability or the like.",
 			`Nushell accepts structured data (nuon) directly as input — strings, lists, records, and tables. Pass data inline rather than constructing it with string manipulation:
 
   String:  "some string" | str replace s S
