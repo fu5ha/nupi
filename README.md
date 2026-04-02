@@ -4,7 +4,7 @@ A [Pi Coding Agent](https://github.com/badlogic/pi-mono/tree/main/packages/codin
 
 ## What it does
 
-Registers a tool named `bash` (displayed as `nushell` in the TUI) that executes scripts using `nu` instead of bash. The agent gets full Nushell language support — structured pipelines, `open`, `http get`, `| where`, `| get`, `| to json`, etc.
+Registers a tool named `bash` (displayed as `nushell` in the TUI) that executes scripts using `nu` instead of bash. The agent gets full Nushell language support — structured pipelines, `open`, `http get`, `| where`, `| get`, `| to json`, `| to nuon`, etc. — including native **nuon** (Nushell Object Notation) for structured data interchange.
 
 ## Requirements
 

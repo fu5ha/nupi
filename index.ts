@@ -35,38 +35,26 @@ export default function (pi: ExtensionAPI) {
 		promptSnippet: "Executes nushell scripts with full language support (pipelines, open, http get, structured data, etc.)",
 
 		promptGuidelines: [
-			"The `bash` tool executes nushell directly — simple expressions like `5 + 5` or `ls | where size > 1mb` work as-is.",
-			"Avoid `nu -c` and `echo` — scripts are already run by nu, no wrapping needed.",
-			"To list built-in commands: `help commands | where command_type == built-in | get name | to text`",
-			"To list custom commands: `help commands | where command_type == custom | get name | to text`",
-			"To get help on a command: `help <command> | ansi strip | str trim`",
-			`Use nuon (Nushell Object Notation) Nushell's native, human-readable, and structured data format. It's designed to be easily read and written by both humans and machines, making it ideal for configuration files and for representing data pipelines. internally. eg:
+			"Scripts run directly in nu — no `nu -c` wrapper or `echo` needed. Simple expressions like `5 + 5` or `ls | where size > 1mb` work as-is.",
+			"Discover commands: `help commands | where command_type == built-in | get name | to text` (built-ins), same with `custom` for user-defined. Get help on one: `help <command> | ansi strip | str trim`",
+			`Nushell accepts structured data (nuon) directly as input — strings, lists, records, and tables. Pass data inline rather than constructing it with string manipulation:
 
-      Create or input structured data in table form directly like so:
+  String:  "some string" | str replace s S
+  List:    [c d e] | append f
+  Record:  { key: value } | get key
+  Table:   [[name size]; [c 3b], [d 5b], ["long name" 1b]] | sort-by size
 
-				[
-    				[
-        				name,
-        				size,
-        				modified
-    				];
-    				[
-        				c,
-        				0b,
-        				2025-11-28T23:05:54.188208850+01:00
-    				],
-    				[
-        				d,
-        				0b,
-        				2025-11-28T23:05:54.188208850+01:00
-    				],
-    				[
-        				e,
-        				0b,
-        				2025-11-28T23:05:54.188208850+01:00
-    				]
-				] | get name
-			`,
+  Full table example:
+
+      [
+          [name, size, modified];
+          [c,    0b,   2025-11-28T23:05:54.188208850+01:00],
+          [d,    0b,   2025-11-28T23:05:54.188208850+01:00],
+          [e,    0b,   2025-11-28T23:05:54.188208850+01:00]
+      ] | get name
+
+  Prefer the table format (one header row, data rows below) over a list of records.`,
+			"In nushell, spaces separate items — commas are optional. Multi-word values must be quoted: `[Alice 30 \"New York\"]` is a 3-item list. Records follow the same rule: `{ key: \"multi word value\" other: singleword }`",
 		],
 
 		parameters: Type.Object({
