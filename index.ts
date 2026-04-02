@@ -60,6 +60,7 @@ export default function (pi: ExtensionAPI) {
   ALWAYS Prefer the table format (one header row, data rows below) over a list of records.`,
 			"In nushell, spaces separate items — commas are optional. Multi-word values MUST be quoted: `[Alice 30 \"New York\"]` is a 3-item list. Records follow the same rule: `{ key: \"multi word value\" other: singleword }`",
 			"To write output to a file, use the `save` command instead of bash-style redirection (`>`). Example: `ls | to json | save output.json`. Use `save --append` to append. Run `save --help` for full options.",
+			'ALWAYS use `collect` when saving to the file you read from, eg: `open c_suite.nuon | where name != "Alice Johnson" | collect | save -f c_suite.nuon`',
 		],
 
 		parameters: Type.Object({
