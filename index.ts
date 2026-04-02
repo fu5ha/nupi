@@ -32,10 +32,11 @@ export default function (pi: ExtensionAPI) {
 			"Multi-line scripts are fine. " +
 			"Avoid raw bash syntax — use nushell idioms instead (e.g. `| where`, `| get`, `| to json`).",
 
-		promptSnippet: "Executes nushell scripts with full language support (pipelines, open, http get, structured data, etc.)",
+		promptSnippet: "Executes nushell scripts with full language support (pipelines, open, http get, structured data, etc.) and nuon (Nushell Object Notation) preference.",
 
 		promptGuidelines: [
 			"Scripts run directly in nu — no `nu -c` wrapper or `echo` needed. Simple expressions like `5 + 5` or `ls | where size > 1mb` work as-is.",
+			"ALWAYS prefer the nushell (Nushell Object Notation) nuon format over json or csv. ALWAYS use nuon for structured data interchange."
 			"Always use nushell for calculations, send eg. `1400 * 300` directly.",
 			"When doing exressions remember to use parenthesis correctly, eg. `(open ceos.nuon | get salary | math sum) / (open ceos.nuon | get salary | length)`",
 			"For more advanced math check out `help math` and `help math <subcommand>` first.",
@@ -56,7 +57,7 @@ export default function (pi: ExtensionAPI) {
           [e,    0b,   2025-11-28T23:05:54.188208850+01:00]
       ] | get name
 
-  Prefer the table format (one header row, data rows below) over a list of records.`,
+  ALWAYS Prefer the table format (one header row, data rows below) over a list of records.`,
 			"In nushell, spaces separate items — commas are optional. Multi-word values MUST be quoted: `[Alice 30 \"New York\"]` is a 3-item list. Records follow the same rule: `{ key: \"multi word value\" other: singleword }`",
 			"To write output to a file, use the `save` command instead of bash-style redirection (`>`). Example: `ls | to json | save output.json`. Use `save --append` to append. Run `save --help` for full options.",
 		],
