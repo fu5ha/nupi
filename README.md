@@ -1,10 +1,10 @@
 # nupi 🐘π
 
-A [Pi Coding Agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) extension that replaces the built-in bash tool with [Nushell](https://www.nushell.sh/) (`nu`).
+A [Pi Coding Agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) extension that replaces the active built-in `bash` tool with a `nushell` tool powered by [Nushell](https://www.nushell.sh/) (`nu`).
 
 ## What it does
 
-Registers a tool named `bash` (displayed as `nushell` in the TUI) that executes scripts using `nu` instead of bash. The agent gets full Nushell language support — structured pipelines, `open`, `http get`, `| where`, `| get`, `| to json`, `| to nuon`, etc. — including native **nuon** (Nushell Object Notation) for structured data interchange.
+Registers a tool named `nushell` and swaps it in for the active built-in `bash` tool. The agent gets full Nushell language support — structured pipelines, `open`, `http get`, `| where`, `| get`, `| to json`, `| to nuon`, etc. — including native **nuon** (Nushell Object Notation) for structured data interchange.
 
 ## Requirements
 

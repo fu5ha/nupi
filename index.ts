@@ -2,7 +2,7 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Text } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
 import { spawn } from "child_process";
-import { tmpdir } from "os";
+import { homedir, tmpdir } from "os";
 import { writeFileSync, unlinkSync } from "fs";
 import { join } from "path";
 import { randomBytes } from "crypto";
@@ -23,45 +23,28 @@ function truncate(text: string): string {
 }
 
 export default function (pi: ExtensionAPI) {
+	pi.on("session_start", () => {
+		const activeTools = pi.getActiveTools();
+		if (activeTools.includes("bash")) {
+			pi.setActiveTools([...new Set(activeTools.map((name) => (name === "bash" ? "nushell" : name)))]);
+		}
+	});
+
 	pi.registerTool({
-		name: "bash",
+		name: "nushell",
 		label: "nushell",
 		description:
-			"Execute a nushell (nu) script. " +
-			"Supports the full nushell language: structured pipelines, `$env`, `open`, `http get`, `ls`, etc. " +
-			"Multi-line scripts are fine. " +
-			"Avoid raw bash syntax — use nushell idioms instead (e.g. `| where`, `| get`, `| to json`).",
+			"Execute a nushell (nu) script. Multi-line scripts are fine.",
 
-		promptSnippet: "Executes nushell scripts with full language support (pipelines, open, http get, structured data, etc.) and nuon (Nushell Object Notation) preference.",
+		promptSnippet: "Execute a nushell (nu) script with full language support; multi-line scripts are fine.",
 
 		promptGuidelines: [
-			"Scripts run directly in nu — no `nu -c` wrapper or `echo` needed. Simple expressions like `5 + 5` or `ls | where size > 1mb` work as-is.",
-			"ALWAYS prefer the nushell (Nushell Object Notation) nuon format over json or csv. ALWAYS use nuon for structured data interchange.",
-			"Always use nushell for calculations, send eg. `1400 * 300` directly.",
-			"When doing exressions remember to use parenthesis correctly, eg. `(open ceos.nuon | get salary | math sum) / (open ceos.nuon | get salary | length)`",
-			"For more advanced math check out `help math` and `help math <subcommand>` first.",
+			"Nushell scripts run directly in nu — no `nu -c` wrapper or `echo` needed. Simple expressions like `ls | where size > 1mb`, `which some-name`, etc. work as-is.",
+			"Avoid bash syntax — use nushell idioms instead: Use `err>` instead of `2>` and `save` instead of `>`, use `| lines`, `| from json`, `from csv` as appropriate to ingest external data.",
 			"Discover commands: `help commands | where command_type == built-in | get name | to text` (built-ins), same with `custom` for user-defined. Get help on one: `help <command> | ansi strip | str trim`",
-			"Display using the `table` command only if user asks for table or better readability or the like.",
-			`Nushell accepts structured data (nuon) directly as input — strings, lists, records, and tables. Pass data inline rather than constructing it with string manipulation:
-
-  String:  "some string" | str replace s S
-  List:    [c d e] | append f
-  Record:  { key: value } | get key
-  Table:   [[name size]; [c 3b], [d 5b], ["long name" 1b]] | sort-by size
-
-  Full table example:
-
-      [
-          [name, size, modified];
-          [c,    0b,   2025-11-28T23:05:54.188208850+01:00],
-          [d,    0b,   2025-11-28T23:05:54.188208850+01:00],
-          [e,    0b,   2025-11-28T23:05:54.188208850+01:00]
-      ] | get name
-
-  ALWAYS Prefer the table format (one header row, data rows below) over a list of records.`,
-			"In nushell, spaces separate items — commas are optional. Multi-word values MUST be quoted: `[Alice 30 \"New York\"]` is a 3-item list. Records follow the same rule: `{ key: \"multi word value\" other: singleword }`",
-			"To write output to a file, use the `save` command instead of bash-style redirection (`>`). Example: `ls | to json | save output.json`. Use `save --append` to append. Run `save --help` for full options.",
-			'ALWAYS use `collect` when saving to the file you read from, eg: `open c_suite.nuon | where name != "Alice Johnson" | collect | save -f c_suite.nuon`',
+			"Use nushell for calculations. Send eg. `1400 * 300` directly. For more advanced math check out `help math` and `help math <subcommand>` first.",
+			"External shell tools like ripgrep, fd/find, git, etc. work as usual from nushell. When piping their output into further Nu commands, ingest/parse it properly first (for example with `lines`, `from json`, `from csv`, `split row`, or other suitable converters) so Nu receives structured data instead of raw text.",
+			"Check whether the environment supports a shell tool you want to use before using it by calling `which some-tool-name`."
 		],
 
 		parameters: Type.Object({
@@ -110,6 +93,7 @@ export default function (pi: ExtensionAPI) {
 			};
 
 			const cwd = ctx.cwd;
+			const piConfig = join(homedir(), ".config", "nushell", "pi.nu");
 
 			return new Promise<ReturnType<typeof resolveShape>>((resolve) => {
 				let stdout = "";
@@ -122,7 +106,7 @@ export default function (pi: ExtensionAPI) {
 				// const proc = spawn("nu", [tmpFile], {
 				const proc = spawn("nu", [
 					"--config",
-					`${process.env.HOME}/.config/nushell/pi.nu`,
+					piConfig,
 					tmpFile
 				], {
 					cwd,
