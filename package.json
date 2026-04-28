@@ -6,9 +6,6 @@
   "pi": {
     "extensions": [
       "index.ts"
-    ],
-    "themes": [
-      "themes/nupi.json"
     ]
   },
   "keywords": [
