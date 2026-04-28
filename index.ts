@@ -10,7 +10,7 @@ import { Container, Text, truncateToWidth } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
 import { randomBytes } from "crypto";
 import { spawn, type ChildProcess } from "child_process";
-import { createWriteStream, writeFileSync, unlinkSync, type WriteStream } from "fs";
+import { createWriteStream, existsSync, writeFileSync, unlinkSync, type WriteStream } from "fs";
 import { homedir, tmpdir } from "os";
 import { join } from "path";
 
@@ -284,6 +284,7 @@ export default function (pi: ExtensionAPI) {
 			};
 
 			const piConfig = join(homedir(), ".config", "nushell", "pi.nu");
+			const nuArgs = existsSync(piConfig) ? ["--config", piConfig, tmpScriptFile] : [tmpScriptFile];
 
 			if (onUpdate) onUpdate({ content: [], details: undefined });
 
@@ -328,7 +329,7 @@ export default function (pi: ExtensionAPI) {
 					});
 				};
 
-				const child = spawn("nu", ["--config", piConfig, tmpScriptFile], {
+				const child = spawn("nu", nuArgs, {
 					cwd: ctx.cwd,
 					detached: process.platform !== "win32",
 					env: getShellEnv(),

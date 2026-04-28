@@ -18,7 +18,7 @@ Registers a tool named `nushell` and swaps it in for the active built-in `bash` 
 pi install git:github.com/fu5ha/nupi
 ```
 
-Create a `pi.nu` in your nushell config dir (`~/.config/nushell/pi.nu`) and source custom commands and `use` modules you want available on pi.
+Optionally create a `pi.nu` in your nushell config dir (`~/.config/nushell/pi.nu`) and source custom commands and `use` modules you want available on pi.
 
 Bonus:
 
@@ -49,4 +49,5 @@ $env.config = {
 ## Behavior
 
 - Scripts are written to a temp file (`pi-nu-*.nu`) before execution to avoid quoting issues with multi-line scripts and special characters.
+- If `~/.config/nushell/pi.nu` exists, Nushell is spawned with `--config ~/.config/nushell/pi.nu`; otherwise the `--config` argument is omitted.
 - Implementation is as close to the built-in `bash` tool as possible in most ways, but it's less extensible by other pi packages.
