@@ -8,6 +8,7 @@ import {
 } from "@mariozechner/pi-coding-agent";
 import { Container, Text, truncateToWidth } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
+import stripAnsi from "strip-ansi";
 import { randomBytes } from "crypto";
 import { spawn, type ChildProcess } from "child_process";
 import { createWriteStream, existsSync, writeFileSync, unlinkSync, type WriteStream } from "fs";
@@ -136,8 +137,27 @@ function formatNushellCall(args: { command?: unknown; timeout?: unknown }, theme
 	return theme.fg("toolTitle", theme.bold(`🐘 ${commandDisplay}`)) + timeoutSuffix;
 }
 
+function sanitizeBinaryOutput(str: string): string {
+	// Copied from Pi's built-in shell rendering path. This strips characters that
+	// can crash string-width or cause TUI display issues.
+	return Array.from(str)
+		.filter((char) => {
+			const code = char.codePointAt(0);
+			if (code === undefined) return false;
+			if (code === 0x09 || code === 0x0a || code === 0x0d) return true;
+			if (code <= 0x1f) return false;
+			if (code >= 0xfff9 && code <= 0xfffb) return false;
+			return true;
+		})
+		.join("");
+}
+
 function getTextOutput(result: any): string {
-	return result?.content?.find?.((item: any) => item?.type === "text")?.text ?? "";
+	if (!result) return "";
+	const textBlocks = result.content?.filter?.((item: any) => item?.type === "text") ?? [];
+	return textBlocks
+		.map((item: any) => sanitizeBinaryOutput(stripAnsi(item.text || "")).replace(/\r/g, ""))
+		.join("\n");
 }
 
 class NushellResultRenderComponent extends Container {
