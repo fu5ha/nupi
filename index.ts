@@ -245,10 +245,10 @@ export default function (pi: ExtensionAPI) {
 			"Nushell scripts run directly in nu. No `nu -c` wrapper or `echo` needed. Simple expressions like `ls | where size > 1mb`, `which some-name`, etc. work as-is.",
 			"Use multi-line scripts instead of ; to break up separate commands.",
 			"Avoid bash syntax — use nushell idioms instead: Use `err>` instead of `2>`, `save` instead of `>`, and declare variables with `let var =` instead of `$var =`",
-			"You can use nushell for calculations. Send eg. `1400 * 300` directly. For more advanced math check out `help math` and `help math <subcommand>` first.",
 			"External shell tools like ripgrep, fd/find, git, etc. work as usual from nushell.",
-			"Remember to use `| lines`, `| from json` or others as appropriate to ingest external data, for example from ripgrep or other tools.",
+			"Remember to use `| lines` or other appropriate converter when piping the output of a shell tool to a nu command (for example `rg ... | lines | first N`)",
 			"Check whether the environment supports a shell tool you want to use before using it by calling `which some-tool-name`.",
+			"You can use nushell for calculations. Send eg. `1400 * 300` directly. For more advanced math check out `help math` first.",
 		],
 
 		parameters: Type.Object({
