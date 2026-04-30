@@ -239,14 +239,15 @@ export default function (pi: ExtensionAPI) {
 		label: "nushell",
 		description: `Execute a nushell (nu) script in the current working directory. Returns stdout and stderr. Output is truncated to last ${DEFAULT_MAX_LINES} lines or ${DEFAULT_MAX_BYTES / 1024}KB (whichever is hit first). If truncated, full output is saved to a temp file. Optionally provide a timeout in seconds.`,
 
-		promptSnippet: "Execute a nushell (nu) script with full language support; multi-line scripts are fine.",
+		promptSnippet: "Execute a nushell (nu) script with full language and multi-line script support.",
 
 		promptGuidelines: [
-			"Nushell scripts run directly in nu — no `nu -c` wrapper or `echo` needed. Simple expressions like `ls | where size > 1mb`, `which some-name`, etc. work as-is.",
-			"Avoid bash syntax — use nushell idioms instead: Use `err>` instead of `2>` and `save` instead of `>`, use `| lines`, `| from json`, `from csv` as appropriate to ingest external data.",
-			"Discover commands: `help commands | where command_type == built-in | get name | to text` (built-ins), same with `custom` for user-defined. Get help on one: `help <command> | ansi strip | str trim`",
-			"Use nushell for calculations. Send eg. `1400 * 300` directly. For more advanced math check out `help math` and `help math <subcommand>` first.",
-			"External shell tools like ripgrep, fd/find, git, etc. work as usual from nushell. When piping their output into further Nu commands, ingest/parse it properly first (for example with `lines`, `from json`, `from csv`, `split row`, or other suitable converters) so Nu receives structured data instead of raw text.",
+			"Nushell scripts run directly in nu. No `nu -c` wrapper or `echo` needed. Simple expressions like `ls | where size > 1mb`, `which some-name`, etc. work as-is.",
+			"Use multi-line scripts instead of ; to break up separate commands.",
+			"Avoid bash syntax — use nushell idioms instead: Use `err>` instead of `2>`, `save` instead of `>`, and declare variables with `let var =` instead of `$var =`",
+			"You can use nushell for calculations. Send eg. `1400 * 300` directly. For more advanced math check out `help math` and `help math <subcommand>` first.",
+			"External shell tools like ripgrep, fd/find, git, etc. work as usual from nushell.",
+			"Remember to use `| lines`, `| from json` or others as appropriate to ingest external data, for example from ripgrep or other tools.",
 			"Check whether the environment supports a shell tool you want to use before using it by calling `which some-tool-name`.",
 		],
 
