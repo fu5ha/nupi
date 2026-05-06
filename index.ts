@@ -243,10 +243,11 @@ export default function (pi: ExtensionAPI) {
 
 		promptGuidelines: [
 			"Nushell scripts run directly in nu. No `nu -c` wrapper or `echo` needed. Simple expressions like `ls | where size > 1mb`, `which some-name`, etc. work as-is",
-			"When combining multiple complex commands into a single nushell tool call, use a multi-line script and save the output each individual command into a variable before returning a final result object at the end that collects each command's result.",
 			"Use nushell idioms instead of bash syntax: `err>` instead of `2>`, `save` instead of `>`, declare variables with `let var =` instead of `$var =`, and use `cmd1 ; cmd2` instead of `cmd1 && cmd2`",
+			"When combining multiple complex commands into a single nushell tool call, use a multi-line script and save the output each individual command into a variable before returning a final result object at the end that collects each command's result.",
 			"External shell tools like ripgrep, fd/find, git, etc. work as usual from nushell and should be prefixed with ^, for example `^rg`",
-			"Remember to use `| lines` or other appropriate converter when piping the output of a shell tool to a nu command (for example `^rg ... | lines | first N`)",
+			"When piping the result of an external command to  a subsequent nushell tool, remember to use `| lines` or other appropriate converter (for example `^rg ... | lines | some-combinator`)",
+			"Remember the semantics of double quoted, single-quoted and raw strings in nu: use 'Some\\String' single quoted strings or r#Some\\String# when you want to have literal backslahes in the string without escaping them.",
 			"Check whether the environment supports a shell tool you want to use before using it by calling `which some-tool-name`.",
 			"You can use nushell for calculations. Send eg. `1400 * 300` directly. For more advanced math check out `help math` first.",
 		],
