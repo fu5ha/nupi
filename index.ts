@@ -250,6 +250,7 @@ export default function (pi: ExtensionAPI) {
 			"When piping the result of an external command through a nushell pipeline, remember to use an appropriate converter to interpret the raw bytes (for example `^rg 'SomeNeedle' -n some/path | lines | first N`)",
 			"Check whether the environment supports a shell tool you want to use before using it by calling `which some-tool-name`.",
 			"You can use nushell for calculations. Send eg. `1400 * 300` directly. For more advanced math check out `help math` first.",
+			"Write long or complex nushell scripts to a persistent `.nu` file first and then execute the script, so it's eaier to edit in case of errors."
 		],
 
 		parameters: Type.Object({
