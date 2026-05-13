@@ -3,6 +3,7 @@ import {
 	DEFAULT_MAX_BYTES,
 	DEFAULT_MAX_LINES,
 	formatSize,
+	keyHint,
 	truncateTail,
 	truncateToVisualLines,
 } from "@mariozechner/pi-coding-agent";
@@ -67,6 +68,14 @@ function getTempScriptPath() {
 
 function formatDuration(ms: number) {
 	return `${(ms / 1000).toFixed(1)}s`;
+}
+
+function formatToolExpandKeyHint(): string {
+	try {
+		return keyHint("app.tools.expand", "to show all");
+	} catch {
+		return "expand to show all";
+	}
 }
 
 function waitForChildProcess(child: ChildProcess): Promise<number | null> {
@@ -189,7 +198,7 @@ function rebuildNushellResultRenderComponent(component: NushellResultRenderCompo
 						state.cachedWidth = width;
 					}
 					if (state.cachedSkipped && state.cachedSkipped > 0) {
-						const hint = theme.fg("muted", `... (${state.cachedSkipped} earlier lines, expand to show all)`);
+						const hint = theme.fg("muted", `... (${state.cachedSkipped} earlier lines, ${formatToolExpandKeyHint()})`);
 						return ["", truncateToWidth(hint, width, "..."), ...(state.cachedLines ?? [])];
 					}
 					return ["", ...(state.cachedLines ?? [])];
